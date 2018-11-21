@@ -17,28 +17,36 @@ def pad_collate(batch):
 class AudioDataBunch(DataBunch):
     @classmethod
     def create(cls, train_ds, valid_ds, test_ds=None, path='.',
-               bs=64, collate_fn=pad_collate, tfms=[], **kwargs):
-        datasets = [train_ds, valid_ds]
-        if test_ds is not None:
-            datasets.append(test_ds)
+               bs=64, equal_lengths=False, tfms=None, **kwargs):
+        if equal_lengths:
+            return super().create(train_ds, valid_ds, test_ds=test_ds, path=path,
+                                  bs=bs, tfms=tfms, **kwargs)
+        else:
+            datasets = [train_ds, valid_ds]
+            if test_ds is not None:
+                datasets.append(test_ds)
 
-        train_sampler = SortishSampler(datasets[0].x,
-                                       key=lambda i: datasets[0][i][0].data.shape[0],
-                                       bs=bs)
-        train_dl = DataLoader(datasets[0], batch_size=bs, sampler=train_sampler, **kwargs)
-        dataloaders = [train_dl]
-        for ds in datasets[1:]:
-            sampler = SortSampler(ds.x,
-                                  key=lambda i: ds[i][0].data.shape[0])
-            dataloaders.append(DataLoader(ds, batch_size=bs, sampler=sampler, **kwargs))
-        return cls(*dataloaders, path=path, collate_fn=collate_fn, tfms=tfms)
+            train_sampler = SortishSampler(datasets[0].x,
+                                           key=lambda i: datasets[0][i][0].data.shape[0],
+                                           bs=bs)
+            train_dl = DataLoader(datasets[0], batch_size=bs, sampler=train_sampler, **kwargs)
+            dataloaders = [train_dl]
+            for ds in datasets[1:]:
+                sampler = SortSampler(ds.x,
+                                      key=lambda i: ds[i][0].data.shape[0])
+                dataloaders.append(DataLoader(ds, batch_size=bs, sampler=sampler, **kwargs))
+            return cls(*dataloaders, path=path, collate_fn=pad_collate, tfms=tfms)
 
 
 class AudioItemList(ItemList):
     """NOTE: this class has been heavily adapted from ImageItemList"""
     _bunch = AudioDataBunch
 
-    def open(self, fn):
+    _calls = 0
+
+    @classmethod
+    def open(cls, fn):
+        cls._calls += 1
         return open_audio(fn)
 
     def get(self, i):
@@ -46,11 +54,11 @@ class AudioItemList(ItemList):
         return self.open(fn)
 
     @classmethod
-    def from_df(cls, df, path, create_func=open_audio, col=0, folder='.', suffix=''):
+    def from_df(cls, df, path, col=0, folder='.', suffix=''):
         """Get the filenames in `col` of `df` and will had `path/folder` in front of them,
         `suffix` at the end. `create_func` is used to open the audio files."""
         suffix = suffix or ''
-        res = super().from_df(df, path=path, create_func=create_func, col=col)
+        res = super().from_df(df, path=path, col=col)
         res.items = np.char.add(np.char.add(f'{folder}/', res.items.astype(str)), suffix)
         res.items = np.char.add(f'{res.path}/', res.items)
         return res
