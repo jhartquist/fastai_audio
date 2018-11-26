@@ -1,5 +1,7 @@
+from functools import partial
 from pathlib import Path
 import os
+from multiprocessing import Pool
 import numpy as np
 import librosa
 from scipy.io import wavfile
@@ -69,12 +71,19 @@ def resample_path(src_path, dst_path, sample_rate=16000, trim=True):
         write_file(data, dst_path/filename.name, sample_rate=sample_rate)
         
 
-def convert_to_mono(src_path, dst_path):
+def _to_mono(filename, dst_path):
+    data, sr = read_file(filename)
+    if len(data.shape) > 1:
+        data = librosa.core.to_mono(data.T) # expects 2,n.. read_file returns n,2
+    write_file(data, dst_path/filename.name, sample_rate=sr)
+
+
+def convert_to_mono(src_path, dst_path, processes=None):
     src_path, dst_path = Path(src_path), Path(dst_path)
     os.makedirs(dst_path, exist_ok=True)
     filenames = list(src_path.iterdir())
-    for filename in tqdm(filenames):
-        data, sr = read_file(filename)
-        if len(data.shape) > 1:
-            data = librosa.core.to_mono(data.T) # expects 2,n.. read_file returns n,2
-        write_file(data, dst_path/filename.name, sample_rate=sr)
+    convert_fn = partial(_to_mono, dst_path=dst_path)
+    with Pool(processes=processes) as pool:
+        with tqdm(total=len(filenames), unit='files') as pbar:
+            for _ in pool.imap_unordered(convert_fn, filenames):
+                pbar.update()
