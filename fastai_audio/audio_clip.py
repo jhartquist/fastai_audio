@@ -9,6 +9,11 @@ class AudioClip(ItemBase):
         self.data = samples
         self.sample_rate = sample_rate
 
+    def __repr__(self):
+        return f'{self.__class__.__name__} ({self.duration} seconds)'
+
+
+
     def apply_tfms(self, tfms, **kwargs):
         print('apply_tfms()')
         if tfms:
@@ -23,8 +28,7 @@ class AudioClip(ItemBase):
     def duration(self):
         return self.num_samples / self.sample_rate
 
-    def __repr__(self):
-        return f'{self.__class__.__name__} ({self.duration} seconds)'
+
 
 
 def open_audio(fn):

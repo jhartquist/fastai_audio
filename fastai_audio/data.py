@@ -42,11 +42,8 @@ class AudioItemList(ItemList):
     """NOTE: this class has been heavily adapted from ImageItemList"""
     _bunch = AudioDataBunch
 
-    _calls = 0
-
     @classmethod
     def open(cls, fn):
-        cls._calls += 1
         return open_audio(fn)
 
     def get(self, i):

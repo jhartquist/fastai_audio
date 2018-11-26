@@ -47,7 +47,7 @@ class SpectrumToDb:
         else:
             ref_value = tensor(self.ref)
         spec_db = x.clamp_min(self.amin).log10_().mul_(self.constant)
-        spec_db.sub_(ref_value.log10_().mul_(10.0))
+        spec_db.sub_(ref_value.clamp_min_(self.amin).log10_().mul_(10.0))
         if self.top_db is not None:
             max_spec = x.contiguous().view(batch_size, -1).max(dim=-1)[0]
             max_spec.unsqueeze_(1).unsqueeze_(1)
