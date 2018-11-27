@@ -5,20 +5,13 @@ __all__ = ['AudioClip', 'open_audio']
 
 
 class AudioClip(ItemBase):
-    def __init__(self, samples, sample_rate):
-        self.data = samples
+    def __init__(self, signal, sample_rate):
+        self.data = signal
         self.sample_rate = sample_rate
 
-    def __repr__(self):
-        return f'{self.__class__.__name__} ({self.duration} seconds)'
-
-
-
-    def apply_tfms(self, tfms, **kwargs):
-        print('apply_tfms()')
-        if tfms:
-            print(' (tfms present)')
-        return self
+    def __str__(self):
+        return '(duration={}s, sample_rate={:.1f}KHz)'.format(
+            self.duration, self.sample_rate/1000)
 
     @property
     def num_samples(self):
@@ -27,8 +20,6 @@ class AudioClip(ItemBase):
     @property
     def duration(self):
         return self.num_samples / self.sample_rate
-
-
 
 
 def open_audio(fn):

@@ -1,17 +1,35 @@
 import librosa as lr
 from fastai import *
 
-__all__ = ['Compose', 'FrequencyToMel', 'SpectrumToDb', 'Spectrogram']
+__all__ = ['get_frequency_transforms', 'get_frequency_batch_transforms',
+           'FrequencyToMel', 'ToDecibels', 'Spectrogram']
 
 
-class Compose:
-    def __init__(self, transforms):
-        self.transforms = transforms
+def get_frequency_transforms(n_fft=2048, n_hop=512, window=torch.hann_window,
+                             n_mels=None, f_min=0, f_max=None, sample_rate=44100,
+                             decibels=True, ref='max', top_db=80.0, norm_db=True):
+    tfms = [Spectrogram(n_fft=n_fft, n_hop=n_hop, window=window)]
+    if n_mels is not None:
+        tfms.append(FrequencyToMel(n_mels=n_mels, n_fft=n_fft, sr=sample_rate,
+                                   f_min=f_min, f_max=f_max))
+    if decibels:
+        tfms.append(ToDecibels(ref=ref, top_db=top_db, normalized=norm_db))
 
-    def __call__(self, audio):
-        for t in self.transforms:
-            audio = t(audio)
-        return audio
+    # only one list, as its applied to all dataloaders
+    return tfms
+
+
+def get_frequency_batch_transforms(*args, add_channel_dim=True, **kwargs):
+    tfms = get_frequency_transforms(*args, **kwargs)
+
+    def _freq_batch_transformer(inputs):
+        xs, ys = inputs
+        for tfm in tfms:
+            xs = tfm(xs)
+        if add_channel_dim:
+            xs.unsqueeze_(1)
+        return xs, ys
+    return [_freq_batch_transformer]
 
 
 class FrequencyToMel:
@@ -26,7 +44,7 @@ class FrequencyToMel:
         return spec_m
 
 
-class SpectrumToDb:
+class ToDecibels:
     def __init__(self,
                  power=2, # magnitude=1, power=2
                  ref=1.0,
@@ -57,6 +75,7 @@ class SpectrumToDb:
         return spec_db
 
 
+# Returns power spectrogram (magnitude squared)
 class Spectrogram:
     def __init__(self, n_fft=1024, n_hop=256, window=torch.hann_window,
                  device=None):

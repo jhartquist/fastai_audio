@@ -17,7 +17,7 @@ def pad_collate(batch):
 class AudioDataBunch(DataBunch):
     @classmethod
     def create(cls, train_ds, valid_ds, test_ds=None, path='.',
-               bs=64, equal_lengths=False, tfms=None, **kwargs):
+               bs=64, equal_lengths=True, tfms=None, **kwargs):
         if equal_lengths:
             return super().create(train_ds, valid_ds, test_ds=test_ds, path=path,
                                   bs=bs, tfms=tfms, **kwargs)

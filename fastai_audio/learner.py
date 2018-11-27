@@ -9,7 +9,7 @@ __all__ = ['create_cnn']
 
 
 # copied from fastai.vision.learner, omitting unused args,
-# and adding channel summing of first conv
+# and adding channel summing of first convolutional layer
 def create_cnn(data, arch, pretrained=True, sum_in_channel_weights=True, **kwargs):
     meta = cnn_config(arch)
     body = create_body(arch(pretrained), meta['cut'])
