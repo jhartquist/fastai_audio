@@ -1,7 +1,8 @@
 from functools import partial
 from pathlib import Path
-import os
 from multiprocessing import Pool
+import os
+import shutil
 import numpy as np
 import librosa
 from scipy.io import wavfile
@@ -87,3 +88,19 @@ def convert_to_mono(src_path, dst_path, processes=None):
         with tqdm(total=len(filenames), unit='files') as pbar:
             for _ in pool.imap_unordered(convert_fn, filenames):
                 pbar.update()
+                
+                
+def transform_path(src_path, dst_path, transform_fn, fnames=None, processes=None, delete=False):
+    src_path, dst_path = Path(src_path), Path(dst_path)
+    if dst_path.exists() and delete:
+        shutil.rmtree(dst_path)
+    os.makedirs(dst_path, exist_ok=True)
+    
+    _transformer = partial(transform_fn, src_path=src_path, dst_path=dst_path)
+    if fnames is None:
+        fnames = [f.name for f in src_path.iterdir()]
+    with Pool(processes=processes) as pool:
+        with tqdm(total=len(fnames), unit='files') as pbar:
+            for _ in pool.imap_unordered(_transformer, fnames):
+                pbar.update()
+            
