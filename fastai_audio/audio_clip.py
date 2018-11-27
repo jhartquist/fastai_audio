@@ -30,10 +30,10 @@ class AudioClip(ItemBase):
         timesteps = np.arange(len(self.data)) / self.sample_rate
         ax.plot(timesteps, self.data)
         ax.set_xlabel('Time (s)')
+        plt.show()
         if player:
             # unable to display an IPython 'Audio' player in plt axes
             display(Audio(self.data, rate=self.sample_rate))
-        plt.show()
 
     def show_batch(self, idxs, rows, ds, **kwargs):
         for i in idxs[:rows]:

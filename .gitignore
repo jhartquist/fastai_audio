@@ -109,3 +109,6 @@ venv.bak/
 
 # local data directory link
 notebooks/data
+
+# local notebook directory
+notebooks/local_nbs
