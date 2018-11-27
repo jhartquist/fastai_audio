@@ -71,7 +71,8 @@ class ToDecibels:
             max_spec.unsqueeze_(1).unsqueeze_(1)
             spec_db = torch.max(spec_db, max_spec - self.top_db)
             if self.normalized:
-                spec_db.add_(self.top_db/2.0).div_(self.top_db/2.0)
+                # normalize to [0, 1]
+                spec_db.add_(self.top_db).div_(self.top_db)
         return spec_db
 
 
