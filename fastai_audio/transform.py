@@ -67,7 +67,7 @@ class ToDecibels:
         spec_db = x.clamp_min(self.amin).log10_().mul_(self.constant)
         spec_db.sub_(ref_value.clamp_min_(self.amin).log10_().mul_(10.0))
         if self.top_db is not None:
-            max_spec = x.contiguous().view(batch_size, -1).max(dim=-1)[0]
+            max_spec = spec_db.view(batch_size, -1).max(dim=-1)[0]
             max_spec.unsqueeze_(1).unsqueeze_(1)
             spec_db = torch.max(spec_db, max_spec - self.top_db)
             if self.normalized:
