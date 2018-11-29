@@ -37,6 +37,14 @@ class AudioDataBunch(DataBunch):
                 dataloaders.append(DataLoader(ds, batch_size=bs, sampler=sampler, **kwargs))
             return cls(*dataloaders, path=path, collate_fn=pad_collate, tfms=tfms)
 
+    def show_batch(self, rows:int=5, ds_type:DatasetType=DatasetType.Train, **kwargs):
+        dl = self.dl(ds_type)
+        ds = dl.dl.dataset
+        idx = np.random.choice(len(ds), size=rows, replace=False)
+        batch = ds[idx]
+        xs, ys = batch.x, batch.y
+        self.train_ds.show_xys(xs, ys, **kwargs)
+
 
 class AudioItemList(ItemList):
     """NOTE: this class has been heavily adapted from ImageItemList"""
@@ -59,3 +67,8 @@ class AudioItemList(ItemList):
         res.items = np.char.add(np.char.add(f'{folder}/', res.items.astype(str)), suffix)
         res.items = np.char.add(f'{res.path}/', res.items)
         return res
+
+    def show_xys(self, xs, ys, figsize=None, **kwargs):
+        for x, y in zip(xs, ys):
+            x.show(title=y, **kwargs)
+

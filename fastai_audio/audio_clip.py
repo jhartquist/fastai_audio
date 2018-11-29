@@ -35,11 +35,6 @@ class AudioClip(ItemBase):
             # unable to display an IPython 'Audio' player in plt axes
             display(Audio(self.data, rate=self.sample_rate))
 
-    def show_batch(self, idxs, rows, ds, **kwargs):
-        for i in idxs[:rows]:
-            x,y = ds[i]
-            x.show(title=y, **kwargs)
-
 
 def open_audio(fn):
     sr, x = wavfile.read(fn)
