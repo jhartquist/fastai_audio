@@ -3,6 +3,8 @@
 # platform: osx-64
 appnope=0.1.0=py36hf537a9a_0
 asn1crypto=0.24.0=py36_0
+atomicwrites=1.2.1=py36_0
+attrs=18.2.0=py36h28b3542_0
 audioread=2.1.5=py36_0
 backcall=0.1.0=py36_0
 blas=1.0=mkl
@@ -23,8 +25,8 @@ decorator=4.3.0=py_0
 dill=0.2.8.2=py36_0
 entrypoints=0.2.3=py36_2
 expat=2.2.6=h0a44026_0
-fastai=1.0.28=py_1
-fastprogress=0.1.15=py_0
+fastai=1.0.30=py_1
+fastprogress=0.1.16=py_0
 ffmpeg=2.8.6=5
 freetype=2.9.1=hb4e5f40_0
 gettext=0.19.8.1=h15daf44_3
@@ -60,9 +62,10 @@ llvmlite=0.25.0=py36h3fea490_1001
 markupsafe=1.1.0=py36h1de35cc_0
 matplotlib=3.0.1=py36h54f8f79_0
 mistune=0.8.4=py36h1de35cc_0
-mkl=2019.1=144
+mkl=2018.0.3=1
 mkl_fft=1.0.6=py36hb8a8100_0
 mkl_random=1.0.1=py36h5d10147_1
+more-itertools=4.3.0=py36_0
 msgpack-numpy=0.4.3.2=py36_0
 msgpack-python=0.5.6=py36h04f5b5a_1
 murmurhash=1.0.1=py36h0a44026_0
@@ -87,16 +90,19 @@ pickleshare=0.7.5=py36_0
 pillow=5.3.0=py36hb68e598_0
 pip=18.1=py36_0
 plac=0.9.6=py36_0
+pluggy=0.8.0=py36_0
 preshed=2.0.1=py36h0a44026_0
 prometheus_client=0.4.2=py36_0
 prompt_toolkit=2.0.7=py36_0
 ptyprocess=0.6.0=py36_0
+py=1.7.0=py36_0
 pycparser=2.19=py36_0
 pygments=2.2.0=py36h240cd3f_0
 pyopenssl=18.0.0=py36_0
 pyparsing=2.3.0=py36_0
 pyqt=5.9.2=py36h655552a_2
 pysocks=1.6.8=py36_0
+pytest=4.0.0=py36_0
 python=3.6.7=haf84260_0
 python-dateutil=2.7.5=py36_0
 pytorch-nightly-cpu=1.0.0.dev20181014=py3.6_0
