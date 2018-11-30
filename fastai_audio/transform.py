@@ -83,7 +83,6 @@ class Spectrogram:
         self.n_fft = n_fft
         self.n_hop = n_hop
         self.window = to_device(window(n_fft), device)
-        self.scaling_constant = (n_fft / 4) ** 0.5
 
     def __call__(self, x):
         X = torch.stft(x,
@@ -92,10 +91,9 @@ class Spectrogram:
                        win_length=self.n_fft,
                        window=self.window,
                        onesided=True,
+                       center=True,
                        pad_mode='constant',
                        normalized=True)
-        # to match output of scipy.signal.stft
-        X.div_(self.scaling_constant)
         # compute power from real and imag parts (magnitude^2)
         X.pow_(2.0)
         power = X[:,:,:,0] + X[:,:,:,1]

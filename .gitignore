@@ -106,6 +106,7 @@ venv.bak/
 
 # IntelliJ IDEA
 .idea/
+*.iml
 
 # local data directory link
 notebooks/data
