@@ -5,7 +5,7 @@ from fastai.callbacks.hooks import num_features_model
 from fastai.vision import create_body, create_head
 from fastai.vision.learner import cnn_config, _resnet_split
 
-__all__ = ['create_cnn']
+__all__ = ['create_cnn', 'create_audio_cnn']
 
 
 # copied from fastai.vision.learner, omitting unused args,
@@ -32,5 +32,18 @@ def create_cnn(data, arch, pretrained=True, sum_channel_weights=True, **kwargs):
     learn.split(meta['split'])
     if pretrained:
         learn.freeze()
+    apply_init(model[1], nn.init.kaiming_normal_)
+    return learn
+
+
+def create_audio_cnn(data, model, cut, head=None, **kwargs):
+    body = nn.Sequential(*list(model.children())[0][:cut])
+    nf = num_features_model(body) * 2
+    if head is None:
+        head = create_head(nf, data.c, None, 0.5)
+    model = nn.Sequential(body, head)
+    learn = Learner(data, model, **kwargs)
+    learn.split(_resnet_split)
+    learn.freeze()
     apply_init(model[1], nn.init.kaiming_normal_)
     return learn
