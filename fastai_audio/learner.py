@@ -12,7 +12,7 @@ __all__ = ['create_cnn']
 # and adding channel summing of first convolutional layer
 def create_cnn(data, arch, pretrained=True, sum_in_channel_weights=True, **kwargs):
     meta = cnn_config(arch)
-    body = create_body(arch(pretrained), meta['cut'])
+    body = create_body(arch, pretrained)
 
     # sum up the weights of in_channels axis, to reduce to single input channel
     # Suggestion by David Gutman
