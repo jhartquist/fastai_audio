@@ -3,21 +3,21 @@ from fastai.train import Learner
 
 from fastai.callbacks.hooks import num_features_model
 from fastai.vision import create_body, create_head
-from fastai.vision.learner import cnn_config
+from fastai.vision.learner import cnn_config, _resnet_split
 
 __all__ = ['create_cnn']
 
 
 # copied from fastai.vision.learner, omitting unused args,
 # and adding channel summing of first convolutional layer
-def create_cnn(data, arch, pretrained=True, sum_in_channel_weights=True, **kwargs):
+def create_cnn(data, arch, pretrained=True, sum_channel_weights=True, **kwargs):
     meta = cnn_config(arch)
     body = create_body(arch, pretrained)
 
     # sum up the weights of in_channels axis, to reduce to single input channel
     # Suggestion by David Gutman
     # https://forums.fast.ai/t/black-and-white-images-on-vgg16/2479/2
-    if sum_in_channel_weights:
+    if sum_channel_weights:
         first_conv_layer = body[0]
         first_conv_weights = first_conv_layer.state_dict()['weight']
         assert first_conv_weights.size(1) == 3 # RGB channels dim

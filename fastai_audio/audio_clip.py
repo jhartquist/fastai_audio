@@ -14,6 +14,15 @@ class AudioClip(ItemBase):
         return '(duration={}s, sample_rate={:.1f}KHz)'.format(
             self.duration, self.sample_rate/1000)
 
+    def clone(self):
+        return self.__class__(self.data.clone(), self.sample_rate)
+
+    def apply_tfms(self, tfms, **kwargs):
+        x = self.clone()
+        for tfm in tfms:
+            x.data = tfm(x.data)
+        return x
+
     @property
     def num_samples(self):
         return len(self.data)
