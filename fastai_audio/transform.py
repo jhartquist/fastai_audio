@@ -61,14 +61,14 @@ class ToDecibels:
         batch_size = x.shape[0]
         if self.ref == 'max':
             ref_value = x.contiguous().view(batch_size, -1).max(dim=-1)[0]
-            ref_value.unsqueeze_(1).unsqueeze_(1)
+            ref_value.unsqueeze_(1) #.unsqueeze_(1)
         else:
             ref_value = tensor(self.ref)
         spec_db = x.clamp_min(self.amin).log10_().mul_(self.constant)
         spec_db.sub_(ref_value.clamp_min_(self.amin).log10_().mul_(10.0))
         if self.top_db is not None:
             max_spec = spec_db.view(batch_size, -1).max(dim=-1)[0]
-            max_spec.unsqueeze_(1).unsqueeze_(1)
+            max_spec.unsqueeze_(1) #.unsqueeze_(1)
             spec_db = torch.max(spec_db, max_spec - self.top_db)
             if self.normalized:
                 # normalize to [0, 1]
