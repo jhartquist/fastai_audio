@@ -2,7 +2,21 @@ from fastai import *
 from scipy.io import wavfile
 from IPython.display import display, Audio
 
-__all__ = ['AudioClip', 'open_audio']
+__all__ = ['AudioClip', 'AudioFrame', 'open_audio']
+
+
+class AudioFrame(ItemBase):
+    def __init__(self, data):
+        self.data = data
+
+    def __str__(self):
+        return '<tmp>'
+
+    def apply_tfms(self, tfms, **kwargs):
+        x = self.clone()
+        for tfm in tfms:
+            x.data = tfm(x.data)
+        return x
 
 
 class AudioClip(ItemBase):

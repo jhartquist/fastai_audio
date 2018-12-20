@@ -3,7 +3,8 @@ from fastai.data_block import _maybe_squeeze
 from fastai.text import SortSampler, SortishSampler
 from .audio_clip import *
 
-__all__ = ['pad_collate1d', 'pad_collate2d', 'AudioDataBunch', 'AudioItemList', ]
+__all__ = ['pad_collate1d', 'pad_collate2d', 'AudioDataBunch', 'AudioItemList',
+           'AudioFrameList']
 
 
 def pad_collate1d(batch):
@@ -66,6 +67,15 @@ class AudioDataBunch(DataBunch):
         batch = ds[idx]
         xs, ys = batch.x, batch.y
         self.train_ds.show_xys(xs, ys, **kwargs)
+
+
+class AudioFrameList(ItemList):
+    _bunch = AudioDataBunch
+
+    def get(self, i):
+        x = super().get(i)
+        t = torch.from_numpy(x.astype(np.float32, copy=False))
+        return AudioFrame(t)
 
 
 class AudioItemList(ItemList):
