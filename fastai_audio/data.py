@@ -1,6 +1,8 @@
-from fastai import *
+from fastai.basic_data import *
+from fastai.data_block import *
 from fastai.data_block import _maybe_squeeze
 from fastai.text import SortSampler, SortishSampler
+from fastai.torch_core import *
 from .audio_clip import *
 
 __all__ = ['pad_collate1d', 'pad_collate2d', 'AudioDataBunch', 'AudioItemList', ]

@@ -9,7 +9,7 @@ import librosa
 from scipy.io import wavfile
 from tqdm import tqdm_notebook as tqdm
 import torch.nn.functional as F
-from fastai import DatasetType
+from fastai.basic_data import DatasetType
 
 
 def read_file(filename, path='', sample_rate=None, trim=False):

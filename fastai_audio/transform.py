@@ -1,5 +1,5 @@
 import librosa as lr
-from fastai import *
+from fastai.torch_core import *
 
 __all__ = ['get_frequency_transforms', 'get_frequency_batch_transforms',
            'FrequencyToMel', 'ToDecibels', 'Spectrogram']

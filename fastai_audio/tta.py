@@ -3,7 +3,6 @@ from fastai.torch_core import *
 from fastai.basic_train import *
 from fastai.basic_train import _loss_func2activ
 from fastai.basic_data import DatasetType
-# from .transform import *
 
 __all__ = []
 

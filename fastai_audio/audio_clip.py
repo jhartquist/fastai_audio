@@ -1,4 +1,4 @@
-from fastai import *
+from fastai.torch_core import *
 from scipy.io import wavfile
 from IPython.display import display, Audio
 

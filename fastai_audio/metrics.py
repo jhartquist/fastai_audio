@@ -1,4 +1,4 @@
-from fastai import *
+from fastai.torch_core import *
 
 __all__ = ['mapk']
 
