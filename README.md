@@ -13,7 +13,7 @@ The [`fastai`](https://github.com/fastai/fastai) library is currently being deve
 
 #### Dependencies
 * python 3.6
-* fastai 1.0.39
+* fastai 1.0.43
 * librosa 0.6.2 
 
 This repo was also heavily inspired by [torchaudio](http://pytorch.org/audio/), especially [`transforms.py`](http://pytorch.org/audio/_modules/torchaudio/transforms.html).
